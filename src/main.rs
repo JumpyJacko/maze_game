@@ -65,37 +65,39 @@ impl State {
         }
     }
 
-    fn input_and_update(&self, p_input: Direction) -> State {
-        let new_player: Entity;
+    fn input(&mut self, p_input: Direction) -> State {
+        self.maze[self.player.position.1][self.player.position.0] = 0; // Clear tile
         match p_input {
             Direction::Right => {
                 if self.check_valid(self.player.move_entity(Direction::Right)) {
-                    new_player = self.player.move_entity(Direction::Right)
-                } else {new_player = self.player}
+                    self.player = self.player.move_entity(Direction::Right)
+                }
             }
             Direction::Left => {
                 if self.check_valid(self.player.move_entity(Direction::Left)) {
-                    new_player = self.player.move_entity(Direction::Left)
-                } else {new_player = self.player}
+                    self.player = self.player.move_entity(Direction::Left)
+                }
             }
             Direction::Down => {
                 if self.check_valid(self.player.move_entity(Direction::Down)) {
-                    new_player = self.player.move_entity(Direction::Down)
-                } else {new_player = self.player}
+                    self.player = self.player.move_entity(Direction::Down)
+                }
             }
             Direction::Up => {
                 if self.check_valid(self.player.move_entity(Direction::Up)) {
-                    new_player = self.player.move_entity(Direction::Up)
-                } else {new_player = self.player}
+                    self.player = self.player.move_entity(Direction::Up)
+                }
             }
         };
 
-        println!("{:?} \n{:?}", new_player, self.player);
-
         State {
             maze: self.maze,
-            player: new_player,
+            player: self.player,
         }
+    }
+
+    fn update(&mut self) {
+        self.maze[self.player.position.1][self.player.position.0] = 2;
     }
 
     fn render(&self) {
@@ -109,14 +111,14 @@ impl State {
     }
 
     fn check_valid(&self, entity: Entity) -> bool {
-        match self.maze[entity.position.1][entity.position.0] {
-            0 => true,
-            _ => false,
-        }
+        matches!(self.maze[entity.position.1][entity.position.0], 3 | 0)
     }
 
     fn check_win_state(&self) -> bool {
-        todo!();
+        if self.maze[self.player.position.1][self.player.position.0] == 3 {
+            return true;
+        }
+        false
     }
 
     fn to_adj_neighbours(&self) -> Vec<Vec<usize>> {
@@ -144,21 +146,22 @@ fn main() {
 
     let mut state = State::new(maze, (1, 1));
 
-    // print!("\x1B[2J\x1B[1;1H");
+    print!("\x1B[2J\x1B[1;1H");
     state.render();
 
     let stdout = Term::buffered_stdout();
     'game_loop: loop {
+        print!("\x1B[1;1H");
         if let Ok(key) = stdout.read_key() {
             match key {
-                Key::ArrowLeft  => state = state.input_and_update(Direction::Left),
-                Key::ArrowRight => state = state.input_and_update(Direction::Right),
-                Key::ArrowUp    => state = state.input_and_update(Direction::Up),
-                Key::ArrowDown  => state = state.input_and_update(Direction::Down),
+                Key::ArrowLeft  => state = state.input(Direction::Left),
+                Key::ArrowRight => state = state.input(Direction::Right),
+                Key::ArrowUp    => state = state.input(Direction::Up),
+                Key::ArrowDown  => state = state.input(Direction::Down),
                 Key::Escape     => break 'game_loop,
-                _ => break 'game_loop, // Handle later
+                _ => break 'game_loop, // FIXME: Handle later
             };
-
+            state.update();
             state.render();
         }
     }
