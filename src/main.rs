@@ -24,7 +24,7 @@ struct State {
     // If wanted, can add an enemy for theseus and the minotaur
 }
 
-const TILES: [&str; 3] = ["..", "##", "@."];
+const TILES: [&str; 4] = ["..", "##", "\x1b[34m@\x1b[0m.", "\x1b[42m..\x1b[0m"];
 
 impl Entity {
     fn new(name: String, position: Point) -> Entity {
@@ -34,21 +34,19 @@ impl Entity {
         }
     }
 
-    fn move_entity(self, position: Direction) -> Entity {
+    fn move_entity(&self, position: Direction) -> Entity {
         match position {
             Direction::Right => todo!(),
             Direction::Left => todo!(),
             Direction::Down => todo!(),
             Direction::Up => todo!(),
         }
-        
-        todo!();
     }
 }
 
 impl State {
     fn new(mut maze: Maze, spawn: Point) -> State {
-        maze[spawn.1 as usize][spawn.0 as usize] += 2;
+        maze[spawn.1 as usize][spawn.0 as usize] = 2;
 
         State {
             maze,
@@ -56,11 +54,12 @@ impl State {
         }
     }
 
-    fn update(self) -> State {
+    fn update(&self) -> State {
         todo!();
     }
 
-    fn render(self) {
+    fn render(&self) {
+        // print!("\x1B[1;1H");
         /*
         Tileset will probably be,
            0 = .  | 1 = ## | 2 = @  | 3 = M  
@@ -77,7 +76,15 @@ impl State {
         });
     }
 
-    fn check_win_state(self) -> bool {
+    fn check_win_state(&self) -> bool {
+        todo!();
+    }
+
+    fn to_adj_neighbours(&self) -> Vec<Vec<usize>> {
+        todo!();
+    }
+    
+    fn from_adj_neighbours(nodes: Vec<Vec<usize>>) -> State {
         todo!();
     }
 }
@@ -87,7 +94,7 @@ fn main() {
     //       an adjacent neighbours table to then translate into a 2D array like this one
     let maze: Maze = [
         [1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 1, 0, 1, 0, 1, 1],
+        [1, 0, 1, 0, 1, 3, 1, 1],
         [1, 0, 0, 0, 1, 0, 0, 1],
         [1, 0, 1, 0, 1, 1, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 1],
@@ -98,7 +105,6 @@ fn main() {
 
     let mut state = State::new(maze, (1, 1));
 
-    println!("{:?}", state);
-
+    // print!("\x1B[2J\x1B[1;1H");
     state.render();
 }
