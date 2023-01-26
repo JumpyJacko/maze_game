@@ -47,7 +47,9 @@ impl Entity {
 }
 
 impl State {
-    fn new(maze: Maze, spawn: Point) -> State {
+    fn new(mut maze: Maze, spawn: Point) -> State {
+        maze[spawn.1 as usize][spawn.0 as usize] += 2;
+
         State {
             maze,
             player: Entity::new("Player".to_owned(), spawn),
@@ -94,7 +96,7 @@ fn main() {
         [1, 1, 1, 1, 1, 1, 1, 1],
     ];
 
-    let state = State::new(maze, (1, 1));
+    let mut state = State::new(maze, (1, 1));
 
     println!("{:?}", state);
 
