@@ -1,6 +1,13 @@
 type Point = (u32, u32);
 type Maze = [[u32; 8]; 8];
 
+enum Direction {
+    Right,
+    Left,
+    Down,
+    Up
+}
+
 #[derive(Debug)]
 struct Entity {
     name: String,
@@ -22,11 +29,14 @@ impl Entity {
         }
     }
 
-    fn move_entity(self, position: Point) -> Entity {
-        // Needs to check for valid position
-        // i.e. Wall, whether new position is adjacent to current position
-        // Maybe opt for a direction and match statement
-        // Consider adding an enum name Direction
+    fn move_entity(self, position: Direction) -> Entity {
+        match position {
+            Direction::Right => todo!(),
+            Direction::Left => todo!(),
+            Direction::Down => todo!(),
+            Direction::Up => todo!(),
+        }
+        
         todo!();
     }
 }
