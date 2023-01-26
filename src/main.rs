@@ -1,5 +1,8 @@
+
+const BOARD_SIZE: usize = 8;
+
 type Point = (u32, u32);
-type Maze = [[u32; 8]; 8];
+type Maze = [[usize; BOARD_SIZE]; BOARD_SIZE];
 
 enum Direction {
     Right,
@@ -20,6 +23,8 @@ struct State {
     player: Entity,
     // If wanted, can add an enemy for theseus and the minotaur
 }
+
+const TILES: [&str; 3] = ["..", "##", "@."];
 
 impl Entity {
     fn new(name: String, position: Point) -> Entity {
@@ -49,7 +54,7 @@ impl State {
         }
     }
 
-    fn update(self, /*positions: Some(Vec)*/) -> State {
+    fn update(self) -> State {
         todo!();
     }
 
@@ -61,7 +66,13 @@ impl State {
            - use numbers in State/self to index the tileset
            - render & profit!
          */
-        todo!();
+
+        self.maze.iter().for_each(|row| {
+            row.iter().for_each(|c| {
+                print!("{}", TILES[*c]);
+            });
+            println!();
+        });
     }
 
     fn check_win_state(self) -> bool {
@@ -72,7 +83,7 @@ impl State {
 fn main() {
     // TODO: Procedurally generate a maze using the Depth-First Search (DFS) method to make 
     //       an adjacent neighbours table to then translate into a 2D array like this one
-    let maze: [[u32; 8]; 8] = [
+    let maze: Maze = [
         [1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 1, 0, 1, 0, 1, 1],
         [1, 0, 0, 0, 1, 0, 0, 1],
@@ -86,4 +97,6 @@ fn main() {
     let state = State::new(maze, (1, 1));
 
     println!("{:?}", state);
+
+    state.render();
 }
