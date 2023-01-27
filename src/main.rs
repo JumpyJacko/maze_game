@@ -22,6 +22,7 @@ struct Entity {
 #[derive(Debug)]
 struct State {
     maze: Maze,
+    finish: Point,
     player: Entity,
     // If wanted, can add an enemy for theseus and the minotaur
 }
@@ -56,11 +57,13 @@ impl Entity {
 }
 
 impl State {
-    fn new(mut maze: Maze, spawn: Point) -> State {
+    fn new(mut maze: Maze, spawn: Point, finish: Point) -> State {
         maze[spawn.1][spawn.0] = 2;
+        maze[finish.1][finish.0] = 3;
 
         State {
             maze,
+            finish,
             player: Entity::new("Player", spawn),
         }
     }
@@ -92,6 +95,7 @@ impl State {
 
         State {
             maze: self.maze,
+            finish: self.finish,
             player: self.player,
         }
     }
@@ -115,10 +119,7 @@ impl State {
     }
 
     fn check_win_state(&self) -> bool {
-        if self.maze[self.player.position.1][self.player.position.0] == 3 {
-            return true;
-        }
-        false
+        self.player.position == self.finish
     }
 
     fn to_adj_neighbours(&self) -> Vec<Vec<usize>> {
@@ -135,7 +136,7 @@ fn main() {
     //       an adjacent neighbours table to then translate into a 2D array like this one
     let maze: Maze = [
         [1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 1, 0, 1, 3, 1, 1],
+        [1, 0, 1, 0, 1, 0, 1, 1],
         [1, 0, 0, 0, 1, 0, 0, 1],
         [1, 0, 1, 0, 1, 1, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 1],
@@ -144,7 +145,7 @@ fn main() {
         [1, 1, 1, 1, 1, 1, 1, 1],
     ];
 
-    let mut state = State::new(maze, (1, 1));
+    let mut state = State::new(maze, (1, 1), (5, 1));
 
     print!("\x1B[2J\x1B[1;1H");
     state.render();
@@ -163,6 +164,10 @@ fn main() {
             };
             state.update();
             state.render();
+            if state.check_win_state() {
+                println!("solved");
+                break 'game_loop;
+            };
         }
     }
 }
