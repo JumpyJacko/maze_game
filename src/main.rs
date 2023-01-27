@@ -134,6 +134,8 @@ impl State {
 fn main() {
     // TODO: Procedurally generate a maze using the Depth-First Search (DFS) method to make
     //       an adjacent neighbours table to then translate into a 2D array like this one
+    // NOTE: To get he size of the DFS adjacent neighbours table, use (SIZEX/Y - 1) / 2
+    //       Will have to create walls
     let maze: Maze = [
         [1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 1, 0, 1, 0, 1, 1],
