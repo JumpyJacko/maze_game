@@ -1,12 +1,4 @@
-
 use crate::*;
-
-pub enum Direction {
-    Right,
-    Left,
-    Down,
-    Up,
-}
 
 #[derive(Debug, Copy, Clone)]
 pub struct Entity {
