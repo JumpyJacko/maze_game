@@ -78,11 +78,7 @@ impl State {
         self.player.position == self.finish
     }
 
-    pub fn to_adj_neighbours(&self) -> Vec<Vec<usize>> {
-        todo!();
-    }
-
-    pub fn from_adj_neighbours(nodes: Vec<Vec<usize>>) -> State {
+    pub fn to_graph(&self) -> graph::Graph {
         todo!();
     }
 }

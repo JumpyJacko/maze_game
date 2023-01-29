@@ -1,6 +1,6 @@
 use crate::*;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct Entity {
     pub name: &'static str,
     pub position: Point,
