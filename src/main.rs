@@ -9,8 +9,8 @@ mod entity;
 mod state;
 mod graph;
 
-pub const SIZEY: usize = 9;
-pub const SIZEX: usize = 9;
+pub const SIZEY: usize = 9; // with padding
+pub const SIZEX: usize = 9; // with padding
 
 pub type Point = (usize, usize);
 pub type Maze = [[usize; SIZEX]; SIZEY];
@@ -22,40 +22,38 @@ fn main() {
     //       an adjacent neighbours table to then translate into a 2D array like this one
     // NOTE: To get he size of the DFS adjacent neighbours table, use (SIZEX/Y - 1) / 2
     //       Will have to create walls
-    let maze: Maze = [
-        [1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 1, 0, 1, 0, 0, 0, 1],
-        [1, 0, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 0, 0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 0, 0, 0, 0, 1],
-        [1, 0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 0, 0, 1, 0, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1],
-    ];
+    // let maze: Maze = [
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    //     [1, 0, 1, 0, 1, 0, 0, 0, 1],
+    //     [1, 0, 1, 0, 1, 1, 1, 0, 1],
+    //     [1, 0, 0, 0, 1, 0, 1, 0, 1],
+    //     [1, 0, 1, 0, 1, 0, 1, 0, 1],
+    //     [1, 0, 1, 0, 0, 0, 0, 0, 1],
+    //     [1, 0, 1, 0, 1, 0, 1, 0, 1],
+    //     [1, 0, 1, 0, 0, 0, 1, 0, 1],
+    //     [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    // ];
 
     let mut adj_neighbours: Graph = Graph::new();
 
-    adj_neighbours.add_edge(0, 4);
-    adj_neighbours.add_edge(1, 5);
-    adj_neighbours.add_edge(2, 3);
-    adj_neighbours.add_edge(3, 7);
-    adj_neighbours.add_edge(4, 5);
+    adj_neighbours.add_edge(0, 1);
+    adj_neighbours.add_edge(1, 2);
+    adj_neighbours.add_edge(2, 6);
+    adj_neighbours.add_edge(5, 6);
+    adj_neighbours.add_edge(5, 4);
     adj_neighbours.add_edge(5, 9);
-    adj_neighbours.add_edge(6, 10);
-    adj_neighbours.add_edge(7, 11);
-    adj_neighbours.add_edge(8, 4);
-    adj_neighbours.add_edge(9, 10);
-    adj_neighbours.add_edge(9, 13);
-    adj_neighbours.add_edge(10, 11);
-    adj_neighbours.add_edge(11, 16);
-    adj_neighbours.add_edge(12, 8);
+    adj_neighbours.add_edge(8, 9);
+    adj_neighbours.add_edge(13, 9);
+    adj_neighbours.add_edge(13, 12);
     adj_neighbours.add_edge(13, 14);
-    adj_neighbours.add_edge(14, 10);
+    adj_neighbours.add_edge(10, 14);
+    adj_neighbours.add_edge(10, 11);
+    adj_neighbours.add_edge(15, 11);
+    adj_neighbours.add_edge(7, 11);
+    adj_neighbours.add_edge(7, 3);
 
-    adj_neighbours.print_graph();
-
-    let mut state = State::new(maze, (1, 1), (5, 1));
+    // let mut state = State::new(maze, (1, 1), (5, 1));
+    let mut state = adj_neighbours.to_state();
 
     print!("\x1B[2J\x1B[1;1H");
     state.render();

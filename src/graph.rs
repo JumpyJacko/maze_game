@@ -23,7 +23,25 @@ impl Graph {
         });
     }
     
-    pub fn from_graph(&self) -> State {
-        todo!();
+    pub fn to_state(&self) -> State {
+        // Internally, there is no border of '1's
+        // Important (graph) nodes are on even numbered coords (inc. 0)
+        let mut maze: Maze = [[1; SIZEX]; SIZEY];
+
+        self.0.iter().enumerate().for_each(|head| {
+            let head_x: usize = head.0 % ((SIZEX - 1) / 2); // - 2 to remove padding
+            let head_y: usize = ((-(head_x as isize) + head.0 as isize) / ((SIZEY - 1) / 2) as isize).try_into().unwrap();
+            maze[(head_y * 2) + 1][(head_x * 2) + 1] = 0;
+            // head.1.iter().for_each(|neighbour| {
+            //     let neighbour_x: usize = neighbour % SIZEX;
+            //     let neighbour_y: usize = (-(neighbour_x as isize) + neighbour.into()) / SIZEY.into();
+            // });
+        });
+
+        State {
+            maze,
+            finish: (SIZEX, SIZEY),
+            player: entity::Entity::new("Player", (1, 1))
+        }
     }
 }
