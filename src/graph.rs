@@ -26,10 +26,10 @@ impl Graph {
             if point.1 != 0 {
                 grid.add_edge(head.0, head.0 - ((SIZEX - 1) / 2));
             }
-            if point.0 > SIZEX {        // HOW IS THIS WORKING????????
+            if point.0 > SIZEX {        // ?
                 grid.add_edge(head.0, head.0 + 1);
             }
-            if point.1 > SIZEY {        // HOW IS THIS WORKING????????
+            if point.1 > SIZEY {        // ?
                 grid.add_edge(head.0, head.0 + ((SIZEY - 1) / 2));
             }
         });
@@ -37,15 +37,14 @@ impl Graph {
         grid
     }
 
-    /// Only works when used on a grid
-    pub fn generate_maze(&self) -> Graph {      // Makes two lists?????
+    /// Use with grid so that the dfs can traverse every thing
+    pub fn dfs_maze(&self, start: usize) -> Graph {
         let mut marked = vec![false; self.0.len()];
         let mut maze = Graph::new(SIZEX, SIZEY);
         let mut dfs_order = vec![];
 
-        let mut stack = vec![0];
+        let mut stack = vec![start];
         while !stack.is_empty() {
-            // println!("{:?}  {:?}", stack, marked);
             let node = stack.pop().unwrap();
             if !marked[node] {
                 marked[node] = true;
@@ -54,22 +53,21 @@ impl Graph {
             let mut neighbour_nodes = vec![];
             for neighbour in &self.0[node] {
                 if !marked[*neighbour] {
-                    maze.add_edge(node, *neighbour);
                     neighbour_nodes.push(neighbour);
+                    maze.add_edge(node, *neighbour);
                 }
             }
             neighbour_nodes.shuffle(&mut thread_rng());
-            stack.extend(neighbour_nodes);
+            stack.extend(neighbour_nodes.iter().copied());
         }
 
-        println!("{:?}", dfs_order);
+        // dfs_order.iter().for_each(|i| println!("{:?}", index_to_cartesian((SIZEX, SIZEY), *i)));
+
         maze
-        // maze.add_edge(0, 1);
-        // Graph(maze.0.clone())
     }
 
     /// For debugging purposes
-    pub fn print_graph(&self) {
+    pub fn _print_graph(&self) {
         self.0.iter().enumerate().for_each(|node| {
             print!("\nAdjacency list of node: {}\nhead", node.0);
             node.1.iter().for_each(|node| {
@@ -79,7 +77,7 @@ impl Graph {
     }
 
     pub fn to_state(&self) -> State {
-        let mut maze: Maze = [[1; SIZEX]; SIZEY]; // kinda stupid
+        let mut maze: Maze = [[1; SIZEX]; SIZEY];
 
         self.0.iter().enumerate().for_each(|head| {
             let head_coords = index_to_cartesian((SIZEX, SIZEY), head.0);

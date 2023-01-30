@@ -9,8 +9,8 @@ mod entity;
 mod graph;
 mod state;
 
-pub const SIZEY: usize = 9; // with padding
-pub const SIZEX: usize = 9; // with padding
+pub const SIZEY: usize = 21; // with padding
+pub const SIZEX: usize = 21; // with padding
 
 pub type Point = (usize, usize);
 pub type Maze = [[usize; SIZEX]; SIZEY];
@@ -34,7 +34,7 @@ fn main() {
     //     [1, 1, 1, 1, 1, 1, 1, 1, 1],
     // ];
 
-    let mut adj_neighbours: Graph = Graph::new(SIZEX, SIZEY);
+    let adj_neighbours: Graph = Graph::new(SIZEX, SIZEY);
 
     // adj_neighbours.add_edge(0, 1);
     // adj_neighbours.add_edge(1, 2);
@@ -53,8 +53,9 @@ fn main() {
     // adj_neighbours.add_edge(7, 3);
 
     // let mut state = State::new(maze, (1, 1), (5, 1));
-    let mut state = adj_neighbours.return_grid().generate_maze().to_state();
-    adj_neighbours.return_grid().generate_maze().print_graph();
+    let grid = adj_neighbours.return_grid();
+    let gen = grid.dfs_maze(0);
+    let mut state = gen.to_state();
     println!();
 
     // print!("\x1B[2J\x1B[1;1H");
