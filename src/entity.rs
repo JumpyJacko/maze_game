@@ -6,7 +6,6 @@ pub struct Entity {
     pub position: Point,
 }
 
-
 impl Entity {
     pub fn new(name: &'static str, position: Point) -> Entity {
         Entity { name, position }

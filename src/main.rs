@@ -1,13 +1,13 @@
 use console::{
-    Key::{ArrowLeft, ArrowRight, ArrowUp, ArrowDown, Escape},
-    Term
+    Key::{ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Escape},
+    Term,
 };
 
-use crate::{state::State, graph::Graph};
+use crate::{graph::Graph, state::State};
 
 mod entity;
-mod state;
 mod graph;
+mod state;
 
 pub const SIZEY: usize = 9; // with padding
 pub const SIZEX: usize = 9; // with padding
@@ -34,26 +34,26 @@ fn main() {
     //     [1, 1, 1, 1, 1, 1, 1, 1, 1],
     // ];
 
-    let mut adj_neighbours: Graph = Graph::new();
+    let mut adj_neighbours: Graph = Graph::new(SIZEX, SIZEY);
 
-    adj_neighbours.add_edge(0, 1);
-    adj_neighbours.add_edge(1, 2);
-    adj_neighbours.add_edge(2, 6);
-    adj_neighbours.add_edge(5, 6);
-    adj_neighbours.add_edge(5, 4);
-    adj_neighbours.add_edge(5, 9);
-    adj_neighbours.add_edge(8, 9);
-    adj_neighbours.add_edge(13, 9);
-    adj_neighbours.add_edge(13, 12);
-    adj_neighbours.add_edge(13, 14);
-    adj_neighbours.add_edge(10, 14);
-    adj_neighbours.add_edge(10, 11);
-    adj_neighbours.add_edge(15, 11);
-    adj_neighbours.add_edge(7, 11);
-    adj_neighbours.add_edge(7, 3);
+    // adj_neighbours.add_edge(0, 1);
+    // adj_neighbours.add_edge(1, 2);
+    // adj_neighbours.add_edge(2, 6);
+    // adj_neighbours.add_edge(5, 6);
+    // adj_neighbours.add_edge(5, 4);
+    // adj_neighbours.add_edge(5, 9);
+    // adj_neighbours.add_edge(8, 9);
+    // adj_neighbours.add_edge(13, 9);
+    // adj_neighbours.add_edge(13, 12);
+    // adj_neighbours.add_edge(13, 14);
+    // adj_neighbours.add_edge(10, 14);
+    // adj_neighbours.add_edge(10, 11);
+    // adj_neighbours.add_edge(15, 11);
+    // adj_neighbours.add_edge(7, 11);
+    // adj_neighbours.add_edge(7, 3);
 
     // let mut state = State::new(maze, (1, 1), (5, 1));
-    let mut state = adj_neighbours.to_state();
+    let mut state = adj_neighbours.return_grid().to_state();
 
     print!("\x1B[2J\x1B[1;1H");
     state.render();
@@ -63,11 +63,11 @@ fn main() {
         print!("\x1B[1;1H");
         if let Ok(key) = stdout.read_key() {
             match key {
-                ArrowLeft  => state = state.input(ArrowLeft),
+                ArrowLeft => state = state.input(ArrowLeft),
                 ArrowRight => state = state.input(ArrowRight),
-                ArrowUp    => state = state.input(ArrowUp),
-                ArrowDown  => state = state.input(ArrowDown),
-                Escape     => break 'game_loop,
+                ArrowUp => state = state.input(ArrowUp),
+                ArrowDown => state = state.input(ArrowDown),
+                Escape => break 'game_loop,
                 _ => break 'game_loop, // FIXME: Handle later
             };
             state.update();

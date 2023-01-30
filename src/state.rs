@@ -29,22 +29,22 @@ impl State {
                 if self.check_valid(self.player.move_entity(ArrowRight)) {
                     self.player = self.player.move_entity(ArrowRight)
                 }
-            },
+            }
             ArrowLeft => {
                 if self.check_valid(self.player.move_entity(ArrowLeft)) {
                     self.player = self.player.move_entity(ArrowLeft)
                 }
-            },
+            }
             ArrowDown => {
                 if self.check_valid(self.player.move_entity(ArrowDown)) {
                     self.player = self.player.move_entity(ArrowDown)
                 }
-            },
+            }
             ArrowUp => {
                 if self.check_valid(self.player.move_entity(ArrowUp)) {
                     self.player = self.player.move_entity(ArrowUp)
                 }
-            },
+            }
             _ => (),
         };
 
