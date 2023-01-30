@@ -1,4 +1,6 @@
 use crate::*;
+use rand::thread_rng;
+use rand::seq::SliceRandom;
 
 #[derive(Debug)]
 pub struct Graph(Vec<Vec<usize>>);
@@ -35,21 +37,46 @@ impl Graph {
         grid
     }
 
-    pub fn depth_first_search(&self) -> Graph {
-        // First, create a grid adjacency list (graph), probably put in 'fn new'
-        // do dfs
-        todo!();
+    /// Only works when used on a grid
+    pub fn generate_maze(&self) -> Graph {      // Makes two lists?????
+        let mut marked = vec![false; self.0.len()];
+        let mut maze = Graph::new(SIZEX, SIZEY);
+        let mut dfs_order = vec![];
+
+        let mut stack = vec![0];
+        while !stack.is_empty() {
+            // println!("{:?}  {:?}", stack, marked);
+            let node = stack.pop().unwrap();
+            if !marked[node] {
+                marked[node] = true;
+                dfs_order.push(node);
+            }
+            let mut neighbour_nodes = vec![];
+            for neighbour in &self.0[node] {
+                if !marked[*neighbour] {
+                    maze.add_edge(node, *neighbour);
+                    neighbour_nodes.push(neighbour);
+                }
+            }
+            neighbour_nodes.shuffle(&mut thread_rng());
+            stack.extend(neighbour_nodes);
+        }
+
+        println!("{:?}", dfs_order);
+        maze
+        // maze.add_edge(0, 1);
+        // Graph(maze.0.clone())
     }
 
     /// For debugging purposes
-    // pub fn print_graph(&self) {
-    //     self.0.iter().enumerate().for_each(|node| {
-    //         print!("\nAdjacency list of node: {}\nhead", node.0);
-    //         node.1.iter().for_each(|node| {
-    //             print!(" -> {}", node);
-    //         });
-    //     });
-    // }
+    pub fn print_graph(&self) {
+        self.0.iter().enumerate().for_each(|node| {
+            print!("\nAdjacency list of node: {}\nhead", node.0);
+            node.1.iter().for_each(|node| {
+                print!(" -> {}", node);
+            });
+        });
+    }
 
     pub fn to_state(&self) -> State {
         let mut maze: Maze = [[1; SIZEX]; SIZEY]; // kinda stupid

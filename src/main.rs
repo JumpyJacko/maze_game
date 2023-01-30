@@ -53,14 +53,16 @@ fn main() {
     // adj_neighbours.add_edge(7, 3);
 
     // let mut state = State::new(maze, (1, 1), (5, 1));
-    let mut state = adj_neighbours.return_grid().to_state();
+    let mut state = adj_neighbours.return_grid().generate_maze().to_state();
+    adj_neighbours.return_grid().generate_maze().print_graph();
+    println!();
 
-    print!("\x1B[2J\x1B[1;1H");
+    // print!("\x1B[2J\x1B[1;1H");
     state.render();
 
     let stdout = Term::buffered_stdout();
     'game_loop: loop {
-        print!("\x1B[1;1H");
+        // print!("\x1B[1;1H");
         if let Ok(key) = stdout.read_key() {
             match key {
                 ArrowLeft => state = state.input(ArrowLeft),
