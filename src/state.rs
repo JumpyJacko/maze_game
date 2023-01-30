@@ -1,6 +1,5 @@
 use crate::*;
 
-use console::Key;
 use entity::Entity;
 
 #[derive(Debug)]
@@ -76,9 +75,5 @@ impl State {
 
     pub fn check_win_state(&self) -> bool {
         self.player.position == self.finish
-    }
-
-    pub fn to_graph(&self) -> graph::Graph {
-        todo!();
     }
 }
