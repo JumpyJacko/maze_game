@@ -46,19 +46,23 @@ impl Graph {
         let mut stack = vec![start];
         while !stack.is_empty() {
             let node = stack.pop().unwrap();
-            if !marked[node] {
-                marked[node] = true;
-                dfs_order.push(node);
-            }
             let mut neighbour_nodes = vec![];
-            for neighbour in &self.0[node] {
-                if !marked[*neighbour] {
+            for &neighbour in &self.0[node] {
+                if !marked[neighbour] {
                     neighbour_nodes.push(neighbour);
-                    maze.add_edge(node, *neighbour);
                 }
             }
             neighbour_nodes.shuffle(&mut thread_rng());
             stack.extend(neighbour_nodes.iter().copied());
+            
+            if !neighbour_nodes.is_empty() {
+                let n_node = neighbour_nodes.pop().unwrap();
+                if !marked[node] {
+                    marked[node] = true;
+                    maze.add_edge(node, n_node);
+                    dfs_order.push(node);
+                }
+            }
         }
 
         // dfs_order.iter().for_each(|i| println!("{:?}", index_to_cartesian((SIZEX, SIZEY), *i)));
