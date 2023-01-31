@@ -2,6 +2,7 @@ use console::{
     Key::{ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Escape},
     Term,
 };
+use std::time::Instant;
 
 use crate::{graph::Graph, state::State};
 
@@ -9,8 +10,8 @@ mod entity;
 mod graph;
 mod state;
 
-pub const SIZEY: usize = 21; // with padding
-pub const SIZEX: usize = 21; // with padding
+pub const SIZEY: usize = 29; // with padding
+pub const SIZEX: usize = 29; // with padding
 
 pub type Point = (usize, usize);
 pub type Maze = [[usize; SIZEX]; SIZEY];
@@ -60,6 +61,7 @@ fn main() {
 
     print!("\x1B[2J\x1B[1;1H");
     state.render();
+    let timer = Instant::now();
 
     let stdout = Term::buffered_stdout();
     'game_loop: loop {
@@ -76,9 +78,13 @@ fn main() {
             state.update();
             state.render();
             if state.check_win_state() {
-                println!("solved");
                 break 'game_loop;
             };
         }
     }
+    let completion_time = timer.elapsed();
+    let secs = completion_time.as_secs();
+    let mins = secs / 60;
+    let millis = (completion_time.subsec_millis()) as u64;
+    println!("Completion Time: {}:{}.{}", mins, secs, millis);
 }
