@@ -55,12 +55,29 @@ impl Graph {
             neighbour_nodes.shuffle(&mut thread_rng());
             stack.extend(neighbour_nodes.iter().copied());
             
-            if !neighbour_nodes.is_empty() {
-                let n_node = neighbour_nodes.pop().unwrap();
-                if !marked[node] {
-                    marked[node] = true;
+            // My code
+            // if !neighbour_nodes.is_empty() {
+            //     let n_node = neighbour_nodes.pop().unwrap();
+            //     if !marked[node] {
+            //         marked[node] = true;
+            //         maze.add_edge(node, n_node);
+            //         dfs_order.push(node);
+            //     }
+            // }
+            // ChatGPT #1
+            // for n_node in neighbour_nodes {
+            //     if !marked[node] {
+            //         marked[node] = true;
+            //         maze.add_edge(node, n_node);
+            //         dfs_order.push(node);
+            //     }
+            // }
+            // ChatGPT #2 + some modification
+            for n_node in neighbour_nodes {
+                if !marked[n_node] {
+                    marked[n_node] = true;
                     maze.add_edge(node, n_node);
-                    dfs_order.push(node);
+                    dfs_order.push(n_node);
                 }
             }
         }
