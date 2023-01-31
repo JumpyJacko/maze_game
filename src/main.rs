@@ -65,7 +65,6 @@ fn main() {
 
     let stdout = Term::buffered_stdout();
     'game_loop: loop {
-        print!("\x1B[1;1H");
         if let Ok(key) = stdout.read_key() {
             match key {
                 ArrowLeft => state = state.input(ArrowLeft),

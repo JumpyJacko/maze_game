@@ -60,7 +60,7 @@ impl State {
     }
 
     pub fn render(&self) {
-        // print!("\x1B[1;1H");
+        print!("\x1B[1;1H");
         self.maze.iter().for_each(|row| {
             row.iter().for_each(|c| {
                 print!("{}", TILES[*c]);
