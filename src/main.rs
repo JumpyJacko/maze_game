@@ -16,44 +16,16 @@ pub const SIZEX: usize = 29; // with padding
 pub type Point = (usize, usize);
 pub type Maze = [[usize; SIZEX]; SIZEY];
 
-pub const TILES: [&str; 4] = ["..", "##", "\x1b[34m@\x1b[0m.", "\x1b[42m..\x1b[0m"];
+pub const TILESET: [&str; 7] =
+    ["..", "##", "\x1b[34m@\x1b[0m.", "\x1b[42m..\x1b[0m",
+    /* Path Finding Tiles, 4: Explored, 5: Explored Head/End, 6: Solved Path */
+    "\x1b[45m..\x1b[0m", "\x1b[105m..\x1b[0m", "\x1b[41m..\x1b[0m"];
 
 fn main() {
-    // TODO: Procedurally generate a maze using the Depth-First Search (DFS) method to make
-    //       an adjacent neighbours table to then translate into a 2D array like this one
-    // NOTE: To get he size of the DFS adjacent neighbours table, use (SIZEX/Y - 1) / 2
-    //       Will have to create walls
-    // let maze: Maze = [
-    //     [1, 1, 1, 1, 1, 1, 1, 1, 1],
-    //     [1, 0, 1, 0, 1, 0, 0, 0, 1],
-    //     [1, 0, 1, 0, 1, 1, 1, 0, 1],
-    //     [1, 0, 0, 0, 1, 0, 1, 0, 1],
-    //     [1, 0, 1, 0, 1, 0, 1, 0, 1],
-    //     [1, 0, 1, 0, 0, 0, 0, 0, 1],
-    //     [1, 0, 1, 0, 1, 0, 1, 0, 1],
-    //     [1, 0, 1, 0, 0, 0, 1, 0, 1],
-    //     [1, 1, 1, 1, 1, 1, 1, 1, 1],
-    // ];
-
+    // TODO: Really need to make a cli to choose between playing or pathfinding, probably just
+    //       use clap again because its really nice and easy.
     let adj_neighbours: Graph = Graph::new(SIZEX, SIZEY);
 
-    // adj_neighbours.add_edge(0, 1);
-    // adj_neighbours.add_edge(1, 2);
-    // adj_neighbours.add_edge(2, 6);
-    // adj_neighbours.add_edge(5, 6);
-    // adj_neighbours.add_edge(5, 4);
-    // adj_neighbours.add_edge(5, 9);
-    // adj_neighbours.add_edge(8, 9);
-    // adj_neighbours.add_edge(13, 9);
-    // adj_neighbours.add_edge(13, 12);
-    // adj_neighbours.add_edge(13, 14);
-    // adj_neighbours.add_edge(10, 14);
-    // adj_neighbours.add_edge(10, 11);
-    // adj_neighbours.add_edge(15, 11);
-    // adj_neighbours.add_edge(7, 11);
-    // adj_neighbours.add_edge(7, 3);
-
-    // let mut state = State::new(maze, (1, 1), (5, 1));
     let grid = adj_neighbours.return_grid();
     let gen = grid.dfs_maze(0);
     let mut state = gen.to_state();

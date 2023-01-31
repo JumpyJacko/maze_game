@@ -5,6 +5,11 @@ use rand::thread_rng;
 #[derive(Debug)]
 pub struct Graph(Vec<Vec<usize>>);
 
+pub struct Path {
+    explored: Vec<Point>,
+    path: Vec<Point>
+}
+
 impl Graph {
     pub fn new(size_x: usize, size_y: usize) -> Graph {
         Graph(vec![Vec::new(); ((size_y - 1) / 2) * ((size_x - 1) / 2)])
@@ -14,6 +19,16 @@ impl Graph {
         self.0[node_1].push(node_2);
         self.0[node_2].push(node_1);
         Graph(self.0.clone())
+    }
+    
+    /// For debugging purposes
+    pub fn _print_graph(&self) {
+        self.0.iter().enumerate().for_each(|node| {
+            print!("\nAdjacency list of node: {}\nhead", node.0);
+            node.1.iter().for_each(|node| {
+                print!(" -> {}", node);
+            });
+        });
     }
 
     pub fn return_grid(&self) -> Graph {
@@ -69,16 +84,6 @@ impl Graph {
 
         maze
     }
-    
-    /// For debugging purposes
-    pub fn _print_graph(&self) {
-        self.0.iter().enumerate().for_each(|node| {
-            print!("\nAdjacency list of node: {}\nhead", node.0);
-            node.1.iter().for_each(|node| {
-                print!(" -> {}", node);
-            });
-        });
-    }
 
     pub fn to_state(&self) -> State {
         let mut maze: Maze = [[1; SIZEX]; SIZEY];
@@ -99,6 +104,37 @@ impl Graph {
         });
 
         State::new(maze, (1, 1), (SIZEX - 2, SIZEY - 2))
+    }
+
+    pub fn bfs(&self) -> Path {
+        todo!();
+    }
+
+    pub fn djikstra(&self) -> Path {
+        todo!();
+    }
+
+    pub fn astar(&self) -> Path {
+        todo!();
+    }
+}
+
+impl Path {
+    pub fn new() -> Path {
+        Path {
+            explored: vec![(0,0)],
+            path: vec![(0,0)]
+        }
+    }
+
+    pub fn plot_path(&self, mut maze: state::State) -> state::State {
+        for &point in &self.explored {
+            maze.maze[point.1][point.0] = 4;
+        }
+        for &point in &self.path {
+            maze.maze[point.1][point.0] = 6;
+        }
+        maze
     }
 }
 

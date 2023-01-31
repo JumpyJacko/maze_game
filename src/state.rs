@@ -63,7 +63,7 @@ impl State {
         print!("\x1B[1;1H");
         self.maze.iter().for_each(|row| {
             row.iter().for_each(|c| {
-                print!("{}", TILES[*c]);
+                print!("{}", TILESET[*c]);
             });
             println!();
         });
