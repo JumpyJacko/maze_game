@@ -120,10 +120,10 @@ impl Graph {
 }
 
 impl Path {
-    pub fn new() -> Path {
+    pub fn new(explored: Vec<Point>, path: Vec<Point>) -> Path {
         Path {
-            explored: vec![(0,0)],
-            path: vec![(0,0)]
+            explored,
+            path
         }
     }
 
