@@ -1,6 +1,6 @@
 use crate::*;
-use rand::thread_rng;
 use rand::seq::SliceRandom;
+use rand::thread_rng;
 
 #[derive(Debug)]
 pub struct Graph(Vec<Vec<usize>>);
@@ -26,10 +26,10 @@ impl Graph {
             if point.1 != 0 {
                 grid.add_edge(head.0, head.0 - ((SIZEX - 1) / 2));
             }
-            if point.0 > SIZEX {        // ?
+            if point.0 > SIZEX {
                 grid.add_edge(head.0, head.0 + 1);
             }
-            if point.1 > SIZEY {        // ?
+            if point.1 > SIZEY {
                 grid.add_edge(head.0, head.0 + ((SIZEY - 1) / 2));
             }
         });
@@ -54,24 +54,7 @@ impl Graph {
             }
             neighbour_nodes.shuffle(&mut thread_rng());
             stack.extend(neighbour_nodes.iter().copied());
-            
-            // My code
-            // if !neighbour_nodes.is_empty() {
-            //     let n_node = neighbour_nodes.pop().unwrap();
-            //     if !marked[node] {
-            //         marked[node] = true;
-            //         maze.add_edge(node, n_node);
-            //         dfs_order.push(node);
-            //     }
-            // }
-            // ChatGPT #1
-            // for n_node in neighbour_nodes {
-            //     if !marked[node] {
-            //         marked[node] = true;
-            //         maze.add_edge(node, n_node);
-            //         dfs_order.push(node);
-            //     }
-            // }
+
             // ChatGPT #2 + some modification
             for n_node in neighbour_nodes {
                 if !marked[n_node] {
@@ -86,7 +69,7 @@ impl Graph {
 
         maze
     }
-
+    
     /// For debugging purposes
     pub fn _print_graph(&self) {
         self.0.iter().enumerate().for_each(|node| {
