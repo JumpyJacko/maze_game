@@ -1,11 +1,14 @@
+use clap::{Arg, Command};
 use console::{
     Key::{ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Escape},
     Term,
 };
-use clap::{Arg, Command};
 use std::time::Instant;
 
-use crate::{graph::{Graph, Path}, state::State};
+use crate::{
+    graph::{Graph, Path},
+    state::State,
+};
 
 mod entity;
 mod graph;
@@ -32,31 +35,30 @@ fn main() {
         .version("0.3.0")
         .author("Jackson Ly (JumpyJacko)")
         .about("A small maze game with a pathfinding visualisation")
-        .arg(Arg::new("path")
-            .short('p')
-            .long("pathfind")
-            .default_value("")
-            .help("Enables a pathfinding algorithm,\nchoose from (bfs, djikstra, a*)"))
+        .arg(
+            Arg::new("path")
+                .short('p')
+                .long("pathfind")
+                .default_value("")
+                .help("Enables a pathfinding algorithm,\nchoose from (bfs, djikstra, a*)"),
+        )
         .get_matches();
 
     let path_alg: &str = matches.get_one::<String>("path").unwrap();
 
-    
     let adj_neighbours: Graph = Graph::new(SIZEX, SIZEY);
 
     let grid = adj_neighbours.return_grid();
     let gen = grid.dfs_maze(0);
     let mut state = gen.to_state();
 
-    let path: Path;
-
     let pathfind_timer = Instant::now();
-    match path_alg {
-        "bfs" => path = gen.bfs(0, ((SIZEY - 1) / 2) * ((SIZEX - 1) / 2) - 1 ),
+    let path = match path_alg {
+        "bfs" => gen.bfs(0, ((SIZEY - 1) / 2) * ((SIZEX - 1) / 2) - 1),
         "djikstra" => todo!(),
         "a*" => todo!(),
-        _ => path = Path::new(),
-    }
+        _ => Path::new(),
+    };
     let pathfind_completion = pathfind_timer.elapsed().as_micros();
 
     let solved_state = path.plot_path(&state);
@@ -64,9 +66,9 @@ fn main() {
     print!("\x1B[2J\x1B[1;1H");
     state.render();
     let timer = Instant::now();
-    
+
     let stdout = Term::buffered_stdout();
-    
+
     print!("\x1B[{};1H", SIZEY + 3);
     if !path_alg.is_empty() {
         println!();
