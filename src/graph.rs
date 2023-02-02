@@ -6,7 +6,7 @@ use std::collections::VecDeque;
 #[derive(Debug)]
 pub struct Graph(Vec<Vec<usize>>);
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Path {
     explored: Vec<usize>,
     path: Vec<usize>,
