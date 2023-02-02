@@ -16,10 +16,10 @@ pub const SIZEX: usize = 29; // with padding
 pub type Point = (usize, usize);
 pub type Maze = [[usize; SIZEX]; SIZEY];
 
-pub const TILESET: [&str; 7] =
+pub const TILESET: [&str; 6] =
     ["..", "##", "\x1b[34m@\x1b[0m.", "\x1b[42m..\x1b[0m",
-    /* Path Finding Tiles, 4: Explored, 5: Explored Head/End, 6: Solved Path */
-    "\x1b[45m..\x1b[0m", "\x1b[105m..\x1b[0m", "\x1b[41m..\x1b[0m"];
+    /* Path Finding Tiles, 4: Explored, 5: Solved Path */
+    "\x1b[45m..\x1b[0m", "\x1b[41m..\x1b[0m"];
 
 fn main() {
     // TODO: Really need to make a cli to choose between playing or pathfinding, probably just
@@ -28,9 +28,12 @@ fn main() {
 
     let grid = adj_neighbours.return_grid();
     let gen = grid.dfs_maze(0);
+    let path = gen.bfs(0, ((SIZEX - 1) / 2) * ((SIZEY - 1) / 2) - 1);
     let mut state = gen.to_state();
-    println!();
 
+    let mut state = path.plot_path(state);
+
+    println!("{:?}", path);
     print!("\x1B[2J\x1B[1;1H");
     state.render();
     let timer = Instant::now();

@@ -1,13 +1,15 @@
 use crate::*;
 use rand::seq::SliceRandom;
+use std::collections::VecDeque;
 use rand::thread_rng;
 
 #[derive(Debug)]
 pub struct Graph(Vec<Vec<usize>>);
 
+#[derive(Debug)]
 pub struct Path {
-    explored: Vec<Point>,
-    path: Vec<Point>
+    explored: Vec<usize>,
+    path: Vec<usize>,
 }
 
 impl Graph {
@@ -106,8 +108,42 @@ impl Graph {
         State::new(maze, (1, 1), (SIZEX - 2, SIZEY - 2))
     }
 
-    pub fn bfs(&self) -> Path {
-        todo!();
+    pub fn bfs(&self, mut start: usize, end: usize) -> Path { 
+        let mut path = Path::new();
+
+        let mut marked = vec![false; self.0.len()];
+        let mut queue: VecDeque<usize> = VecDeque::new();
+        let mut parent: Vec<usize> = vec![0; self.0.len()];
+
+        parent[start] = start;
+
+        marked[start] = true;
+        queue.push_back(start);
+
+        while !queue.is_empty() {
+            start = *queue.front().unwrap();
+
+            path.explored.push(start);
+
+            queue.pop_front();
+
+            if start == end {
+                parent.remove(0);
+                println!("{:?}", &parent);
+                path.path = backtrace(parent, 0, end);
+                return path;
+            }
+
+            for &node in &self.0[start] {
+                if !marked[node] {
+                    marked[node] = true;
+                    parent[node] = start;
+                    queue.push_back(node);
+                }
+            }
+        }
+
+        path
     }
 
     pub fn djikstra(&self) -> Path {
@@ -120,19 +156,21 @@ impl Graph {
 }
 
 impl Path {
-    pub fn new(explored: Vec<Point>, path: Vec<Point>) -> Path {
+    pub fn new() -> Path {
         Path {
-            explored,
-            path
+            explored: Vec::new(),
+            path: Vec::new()
         }
     }
 
     pub fn plot_path(&self, mut maze: state::State) -> state::State {
         for &point in &self.explored {
-            maze.maze[point.1][point.0] = 4;
+            let cartesian_p = index_to_cartesian((SIZEX, SIZEY), point);
+            maze.maze[(cartesian_p.1 * 2) + 1][(cartesian_p.0 * 2) + 1] = 4;
         }
         for &point in &self.path {
-            maze.maze[point.1][point.0] = 6;
+            let cartesian_p = index_to_cartesian((SIZEX, SIZEY), point);
+            maze.maze[(cartesian_p.1 * 2) + 1][(cartesian_p.0 * 2) + 1] = 5;
         }
         maze
     }
@@ -149,4 +187,13 @@ fn index_to_cartesian(size: Point, index: usize) -> (usize, usize) {
             .try_into()
             .unwrap(),
     )
+}
+
+fn backtrace(parent: Vec<usize>, start: usize, end: usize) -> Vec<usize> {
+    let mut path: Vec<usize> = vec![end];
+    while *path.last().unwrap() != start {
+        path.push(parent[*path.last().unwrap() - 1]);
+    }
+    path.reverse();
+    path
 }

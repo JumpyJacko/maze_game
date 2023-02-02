@@ -70,7 +70,7 @@ impl State {
     }
 
     pub fn check_valid(&self, entity: Entity) -> bool {
-        matches!(self.maze[entity.position.1][entity.position.0], 3 | 0)
+        matches!(self.maze[entity.position.1][entity.position.0], 3 | 4 | 5 | 0)
     }
 
     pub fn check_win_state(&self) -> bool {
