@@ -10,16 +10,21 @@ mod entity;
 mod graph;
 mod state;
 
-pub const SIZEY: usize = 29; // with padding
-pub const SIZEX: usize = 29; // with padding
+pub const SIZEY: usize = 21; // with padding
+pub const SIZEX: usize = 21; // with padding
 
 pub type Point = (usize, usize);
 pub type Maze = [[usize; SIZEX]; SIZEY];
 
-pub const TILESET: [&str; 6] =
-    ["..", "##", "\x1b[34m@\x1b[0m.", "\x1b[42m..\x1b[0m",
+pub const TILESET: [&str; 6] = [
+    "..",
+    "##",
+    "\x1b[34m@\x1b[0m.",
+    "\x1b[42m..\x1b[0m",
     /* Path Finding Tiles, 4: Explored, 5: Solved Path */
-    "\x1b[45m..\x1b[0m", "\x1b[41m..\x1b[0m"];
+    "\x1b[45m..\x1b[0m",
+    "\x1b[41m..\x1b[0m",
+];
 
 fn main() {
     // TODO: Really need to make a cli to choose between playing or pathfinding, probably just
@@ -28,12 +33,11 @@ fn main() {
 
     let grid = adj_neighbours.return_grid();
     let gen = grid.dfs_maze(0);
-    let path = gen.bfs(0, ((SIZEX - 1) / 2) * ((SIZEY - 1) / 2) - 1);
     let mut state = gen.to_state();
 
-    let mut state = path.plot_path(state);
+    let path = &gen.bfs(0, ((SIZEX - 1) / 2) * ((SIZEY - 1) / 2) - 1);
+    let solved_state = path.plot_path(&state);
 
-    println!("{:?}", path);
     print!("\x1B[2J\x1B[1;1H");
     state.render();
     let timer = Instant::now();
@@ -41,6 +45,7 @@ fn main() {
     let stdout = Term::buffered_stdout();
     'game_loop: loop {
         if let Ok(key) = stdout.read_key() {
+            print!("\x1B[1;1H");
             match key {
                 ArrowLeft => state = state.input(ArrowLeft),
                 ArrowRight => state = state.input(ArrowRight),
@@ -51,6 +56,8 @@ fn main() {
             };
             state.update();
             state.render();
+            println!();
+            solved_state.render();
             if state.check_win_state() {
                 break 'game_loop;
             };

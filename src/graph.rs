@@ -1,7 +1,7 @@
 use crate::*;
 use rand::seq::SliceRandom;
-use std::collections::VecDeque;
 use rand::thread_rng;
+use std::collections::VecDeque;
 
 #[derive(Debug)]
 pub struct Graph(Vec<Vec<usize>>);
@@ -22,7 +22,7 @@ impl Graph {
         self.0[node_2].push(node_1);
         Graph(self.0.clone())
     }
-    
+
     /// For debugging purposes
     pub fn _print_graph(&self) {
         self.0.iter().enumerate().for_each(|node| {
@@ -99,6 +99,7 @@ impl Graph {
                 let neighbour_coords = index_to_cartesian((SIZEX, SIZEY), *neighbour);
                 let neighbour_x: usize = neighbour_coords.0;
                 let neighbour_y: usize = neighbour_coords.1;
+
                 let inbetween_x = head_x + neighbour_x;
                 let inbetween_y = head_y + neighbour_y;
                 maze[inbetween_y + 1][inbetween_x + 1] = 0;
@@ -108,7 +109,7 @@ impl Graph {
         State::new(maze, (1, 1), (SIZEX - 2, SIZEY - 2))
     }
 
-    pub fn bfs(&self, mut start: usize, end: usize) -> Path { 
+    pub fn bfs(&self, mut start: usize, end: usize) -> Path {
         let mut path = Path::new();
 
         let mut marked = vec![false; self.0.len()];
@@ -159,20 +160,21 @@ impl Path {
     pub fn new() -> Path {
         Path {
             explored: Vec::new(),
-            path: Vec::new()
+            path: Vec::new(),
         }
     }
 
-    pub fn plot_path(&self, mut maze: state::State) -> state::State {
+    pub fn plot_path(&self, maze: &state::State) -> state::State {
+        let mut solved_maze: Maze = maze.maze;
         for &point in &self.explored {
             let cartesian_p = index_to_cartesian((SIZEX, SIZEY), point);
-            maze.maze[(cartesian_p.1 * 2) + 1][(cartesian_p.0 * 2) + 1] = 4;
+            solved_maze[(cartesian_p.1 * 2) + 1][(cartesian_p.0 * 2) + 1] = 4;
         }
         for &point in &self.path {
             let cartesian_p = index_to_cartesian((SIZEX, SIZEY), point);
-            maze.maze[(cartesian_p.1 * 2) + 1][(cartesian_p.0 * 2) + 1] = 5;
+            solved_maze[(cartesian_p.1 * 2) + 1][(cartesian_p.0 * 2) + 1] = 5;
         }
-        maze
+        State::new(solved_maze, (1, 1), (SIZEX - 2, SIZEY - 2))
     }
 }
 
